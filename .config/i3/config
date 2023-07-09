@@ -44,7 +44,7 @@ bindsym $mod+shift+U exec --no-startup-id ~/scripts/lock.sh & systemctl suspend
 exec --no-startup-id nm-applet
 
 # start polybar and set bg
-exec --no-startup-id polybar mybar
+exec --no-startup-id ./scripts/launch_polybar.sh 
 exec_always --no-startup-id feh --bg-scale ~/Pictures/wallpapers/jp.jpg
 
 # language switch
@@ -104,6 +104,9 @@ mode "swap" {
 }
 
 bindsym $mod+Shift+i mark --add "swapee"; mode "swap"
+
+# move workspace between screens 
+bindsym $mod+n move workspace to output right
 
 
 #i3-gaps
