@@ -23,6 +23,11 @@ alias ranger="mykitty ranger"
 alias tm="tmux"
 alias i3lock="i3lock -c 000000"
 
+function fd () {
+    cd $(find ~/code -mindepth 2 -maxdepth 3 -type d | fzf);
+}
+
+export fd
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
