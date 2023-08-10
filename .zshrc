@@ -14,7 +14,7 @@ export fd
 
 bindkey -s ^f "fd\n"
 
-alias mcd=scripts/mcd.sh
+alias mcd=~/scripts/mcd.sh
 
 source $ZSH/oh-my-zsh.sh
 
