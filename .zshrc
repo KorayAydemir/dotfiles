@@ -15,7 +15,16 @@ export fd
 bindkey -s ^f "fd\n"
 
 alias mcd=~/scripts/mcd.sh
+alias pn=pnpm
 
 source $ZSH/oh-my-zsh.sh
 
 # For a full list of active aliases, run `alias`.
+
+# pnpm
+export PNPM_HOME="/Users/kaydemir/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
