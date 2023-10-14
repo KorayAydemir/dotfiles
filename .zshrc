@@ -6,6 +6,18 @@ export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="robbyrussell"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 
+mykitty(){
+kitty @ set-spacing padding=0
+$*
+kitty @ set-spacing padding=default
+}
+alias nvim="mykitty nvim"
+alias cava="mykitty cava"
+alias ranger="mykitty ranger"
+alias tm="tmux"
+alias i3lock="i3lock -c 000000"
+alias csh="~/scripts/cheatsheet.sh"
+
 function fd () {
     cd "$(find ~/code -mindepth 2 -maxdepth 3 -type d | fzf)";
 }
