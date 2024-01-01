@@ -5,6 +5,8 @@
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="robbyrussell"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
+export PATH=$PATH:$HOME/go/bin:$HOME/development/flutter/bin
+
 
 function fd () {
     cd "$(find ~/code -mindepth 2 -maxdepth 3 -type d | fzf)";
@@ -44,3 +46,10 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+# bun completions
+[ -s "/Users/kaydemir/.bun/_bun" ] && source "/Users/kaydemir/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
