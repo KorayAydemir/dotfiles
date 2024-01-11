@@ -6,6 +6,9 @@
 ZSH_THEME="robbyrussell"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 
+export JAVA_HOME=$HOME/dev/jdk-21
+export PATH=$JAVA_HOME/bin:$PATH
+
 alias nvim=$HOME/dev/nvim-linux64/bin/nvim
 alias i3lock="i3lock -c 000000"
 alias csh="~/scripts/cheatsheet.sh"
