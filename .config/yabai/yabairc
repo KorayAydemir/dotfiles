@@ -6,7 +6,6 @@ yabai -m config \
   top_padding 0 \
   left_padding 0 \
   right_padding 0 \
-  window_border off \
   mouse_modifier alt \
   mouse_action1 resize \
   mouse_action2 move \
