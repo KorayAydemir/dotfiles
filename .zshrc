@@ -18,6 +18,7 @@ alias i3lock="i3lock -c 000000"
 alias csh="~/scripts/cheatsheet.sh"
 alias mcd=~/scripts/mcd.sh
 alias pn=pnpm
+alias lg="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative"
 
 function fd () {
     cd "$(find ~/code -mindepth 2 -maxdepth 3 -type d | fzf)";
