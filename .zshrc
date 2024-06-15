@@ -7,6 +7,7 @@ ZSH_THEME="robbyrussell"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 export PATH=$PATH:$HOME/go/bin:$HOME/development/flutter/bin
 
+alias lg="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative"
 
 function fd () {
     cd "$(find ~/code -mindepth 2 -maxdepth 3 -type d | fzf)";
