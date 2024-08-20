@@ -1,5 +1,7 @@
 cmd - return : /Applications/kitty.app/Contents/MacOS/kitty --single-instance -d ~
 
+# okay macos, i gave up.
+
 #cmd - h : :
 #
 #cmd - w : :
