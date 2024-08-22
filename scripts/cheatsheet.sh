@@ -16,8 +16,6 @@ if echo "$languages" | grep -qs $selected; then
     kitty @ launch --title Output
 
     kitty @ send-text --match 'title:^Output' curl cht.sh/$selected/$(echo "$query" | tr " " "+") '\r'
-    #curl cht.sh/$selected/$(echo "$query" | tr " " "+")| kitty @ send-text --match 'title:^Output' --stdin
-    
 else
     curl cht.sh/$selected~$query
 fi
