@@ -58,7 +58,8 @@ local tabKeys = {
 	{ key = "Tab", mods = "CTRL|SHIFT", action = act({ ActivateTabRelative = -1 }) },
 
 	{ key = "w", mods = SUPER, action = act({ CloseCurrentTab = { confirm = true } }) },
-	{ key = "t", mods = SUPER, action = act({ SpawnTab = "DefaultDomain" }) },
+	{ key = "f", mods = SUPER, action = act.SpawnTab'CurrentPaneDomain' },
+	{ key = "t", mods = SUPER, action = act.SpawnCommandInNewTab { cwd = wezterm.home_dir } },
 }
 
 local otherKeys = {
@@ -69,8 +70,10 @@ local otherKeys = {
 	{ key = "b", mods = "CTRL|SHIFT", action = act({ ClearScrollback = "ScrollbackOnly" }) },
 
 	{ key = "m", mods = SUPER, action = act.EmitEvent("trigger-vim-with-scrollback") },
-	{ key = "m", mods = SUPER .. "|SHIFT", action = act("ActivateCopyMode") },
-	{ key = "/", mods = SUPER, action = act({ Search = { CaseSensitiveString = "" } }) },
+    { key = "/", mods = SUPER, action = act({ Search = { CaseSensitiveString = "" } }) },
+
+    { key = '+', mods = SUPER .. "|SHIFT", action = wezterm.action.IncreaseFontSize },
+    { key = '-', mods = SUPER, action = wezterm.action.DecreaseFontSize },
 }
 
 local config = {
@@ -87,6 +90,8 @@ local config = {
 
 	enable_tab_bar = true,
 	hide_tab_bar_if_only_one_tab = true,
+
+    adjust_window_size_when_changing_font_size = false,
 
 	disable_default_key_bindings = false,
 	keys = {},
