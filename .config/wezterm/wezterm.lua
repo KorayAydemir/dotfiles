@@ -1,17 +1,20 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
 
-local OS = os.getenv("HOME") and "mac" or "win"
-local SUPER = OS == "mac" and "CMD" or "ALT"
+local is_mac <const> = wezterm.target_triple == "aarch64-apple-darwin"
+local is_linux <const> = wezterm.target_triple == "86_64-unknown-linux-gnu"
+local is_win <const> = wezterm.target_triple == "x86_64-pc-windows-msvc"
+local SUPER = is_mac and "CMD" or "ALT"
 
-local one = OS == "mac" and "1" or "!"
-local two = OS == "mac" and "2" or "@"
-local three = OS == "mac" and "3" or "#"
-local four = OS == "mac" and "4" or "$"
-local five = OS == "mac" and "5" or "%"
-local six = OS == "mac" and "6" or "^"
-local seven = OS == "mac" and "7" or "&"
-local eight = OS == "mac" and "8" or "*"
+local one = is_win and "!" or "1"
+local two = is_win and "@" or "2"
+local three = is_win and "#" or "3"
+local four = is_win and "$" or "4"
+local five = is_win and "%" or "5"
+local six = is_win and "^" or "6"
+local seven = is_win and "&" or "7"
+local eight = is_win and "*" or "8"
+local nine = is_win and "(" or "9"
 
 wezterm.on("trigger-vim-with-scrollback", function(window, pane)
 	local text = pane:get_lines_as_text(2000)
@@ -19,7 +22,9 @@ wezterm.on("trigger-vim-with-scrollback", function(window, pane)
 	-- Create a temporary file to pass to vim
 	local name = os.tmpname()
 	local f = io.open(name, "w+")
-    if not f then return end
+	if not f then
+		return
+	end
 	f:write(text)
 	f:flush()
 	f:close()
@@ -27,7 +32,7 @@ wezterm.on("trigger-vim-with-scrollback", function(window, pane)
 	-- Open a new window running vim and tell it to open the file
 	window:perform_action(
 		act.SpawnCommandInNewTab({
-			args = { "nvim", name },
+			args = { is_mac and "/opt/homebrew/bin/nvim" or "nvim", name },
 		}),
 		pane
 	)
@@ -51,6 +56,7 @@ local tabKeys = {
 	{ key = six, mods = SUPER .. "|SHIFT", action = act({ ActivateTab = 5 }) },
 	{ key = seven, mods = SUPER .. "|SHIFT", action = act({ ActivateTab = 6 }) },
 	{ key = eight, mods = SUPER .. "|SHIFT", action = act({ ActivateTab = 7 }) },
+	{ key = nine, mods = SUPER .. "|SHIFT", action = act({ ActivateTab = 8 }) },
 
 	{ key = "l", mods = SUPER .. "|SHIFT", action = act({ MoveTabRelative = 1 }) },
 	{ key = "h", mods = SUPER .. "|SHIFT", action = act({ MoveTabRelative = -1 }) },
@@ -58,8 +64,8 @@ local tabKeys = {
 	{ key = "Tab", mods = "CTRL|SHIFT", action = act({ ActivateTabRelative = -1 }) },
 
 	{ key = "w", mods = SUPER, action = act({ CloseCurrentTab = { confirm = true } }) },
-	{ key = "f", mods = SUPER, action = act.SpawnTab'CurrentPaneDomain' },
-	{ key = "t", mods = SUPER, action = act.SpawnCommandInNewTab { cwd = wezterm.home_dir } },
+	{ key = "f", mods = SUPER, action = act.SpawnTab("CurrentPaneDomain") },
+	{ key = "t", mods = SUPER, action = act.SpawnCommandInNewTab({ cwd = wezterm.home_dir }) },
 }
 
 local otherKeys = {
@@ -70,14 +76,14 @@ local otherKeys = {
 	{ key = "b", mods = "CTRL|SHIFT", action = act({ ClearScrollback = "ScrollbackOnly" }) },
 
 	{ key = "m", mods = SUPER, action = act.EmitEvent("trigger-vim-with-scrollback") },
-    { key = "/", mods = SUPER, action = act({ Search = { CaseSensitiveString = "" } }) },
+	{ key = "/", mods = SUPER, action = act({ Search = { CaseSensitiveString = "" } }) },
 
-    { key = '+', mods = SUPER .. "|SHIFT", action = wezterm.action.IncreaseFontSize },
-    { key = '-', mods = SUPER, action = wezterm.action.DecreaseFontSize },
+	{ key = "+", mods = SUPER .. "|SHIFT", action = wezterm.action.IncreaseFontSize },
+	{ key = "-", mods = SUPER, action = wezterm.action.DecreaseFontSize },
 }
 
 local config = {
-	default_prog = { "pwsh" },
+	default_prog = { is_win and "pwsh" or is_mac and "/opt/homebrew/bin/bash" },
 	max_fps = 144,
 	window_padding = {
 		top = 0,
@@ -86,12 +92,12 @@ local config = {
 		right = 0,
 	},
 
-	font_size = OS == "win" and 16.0 or 18.0,
+	font_size = is_win and 16.0 or 18.0,
 
 	enable_tab_bar = true,
 	hide_tab_bar_if_only_one_tab = true,
 
-    adjust_window_size_when_changing_font_size = false,
+	adjust_window_size_when_changing_font_size = false,
 
 	disable_default_key_bindings = false,
 	keys = {},
