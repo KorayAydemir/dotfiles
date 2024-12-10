@@ -26,9 +26,13 @@ wezterm.on("format-tab-title", function(tab)
     end
 
     local pane_cwd = tab.active_pane.current_working_dir.file_path
-    local pane_cwd_without_last_slash = pane_cwd:sub(1, -2)
 
-    return basename(pane_cwd_without_last_slash)
+    if is_win then
+        local pane_cwd_without_slash_at_end = pane_cwd:sub(1, -2)
+        return basename(pane_cwd_without_slash_at_end)
+    end
+
+    return basename(pane_cwd)
 end)
 
 wezterm.on("trigger-vim-with-scrollback", function(window, pane)
