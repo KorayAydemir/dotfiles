@@ -2,6 +2,7 @@ Set-PSReadLineOption -EditMode Emacs
 Set-PSReadLineKeyHandler -Chord 'Ctrl+f' -Function ForwardWord
 
 Set-Alias -Name g -Value git
+Set-Alias -Name cz -Value chezmoi
 
 function fd {
     $code_dir = "$HOME\dev\"
@@ -20,4 +21,8 @@ function prompt {
         $osc7 = "$ansi_escape]7;file://${env:COMPUTERNAME}/${provider_path}${ansi_escape}\"
     }
     "${osc7}PS $p$('>' * ($nestedPromptLevel + 1)) ";
+}
+
+function czcd {
+    Set-Location "~/.local/share/chezmoi/"
 }

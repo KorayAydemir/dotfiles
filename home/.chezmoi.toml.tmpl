@@ -1,0 +1,10 @@
+{{- $work := false -}}
+
+{{- $email := "korayaydemir99@gmail.com" -}}
+{{- if $work -}}
+{{-   $email = "koaydemir@protel.com.tr" -}}
+{{- end -}}
+
+[data]
+    work = {{ $work }}
+    email = {{ $email | quote }}
