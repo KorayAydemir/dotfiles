@@ -36,7 +36,7 @@ wezterm.on("format-tab-title", function(tab)
 end)
 
 wezterm.on("trigger-vim-with-scrollback", function(window, pane)
-	local text = pane:get_lines_as_text(2000)
+	local text = pane:get_logical_lines_as_text(2000)
 
 	-- Create a temporary file to pass to vim
 	local name = os.tmpname()
