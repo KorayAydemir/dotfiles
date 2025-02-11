@@ -2,7 +2,6 @@ local wezterm = require("wezterm")
 
 local config = wezterm.config_builder()
 local act = wezterm.action
-local mux = wezterm.mux
 
 local is_mac = wezterm.target_triple == "aarch64-apple-darwin"
 local is_linux = wezterm.target_triple == "86_64-unknown-linux-gnu"
@@ -68,7 +67,11 @@ wezterm.on("trigger-vim-with-scrollback", function(window, pane)
 	os.remove(name)
 end)
 
-config.default_prog = { is_win and "pwsh" or is_mac and "/opt/homebrew/bin/bash" }
+if is_win then
+	config.default_prog = { "pwsh" }
+elseif is_mac then
+	config.default_prog = { "/opt/homebrew/bin/bash" }
+end
 
 config.adjust_window_size_when_changing_font_size = false
 
@@ -90,7 +93,10 @@ config.unix_domains = {
 		name = "unix",
 	},
 }
-config.default_gui_startup_args = { "connect", "unix" }
+-- on mac it causes visual artifacts when scrolling in neovim
+if not is_mac then
+	config.default_gui_startup_args = { "connect", "unix" }
+end
 
 config.disable_default_key_bindings = false
 config.leader = { key = "a", mods = "CTRL", timeout_miliseconds = 2000 }
