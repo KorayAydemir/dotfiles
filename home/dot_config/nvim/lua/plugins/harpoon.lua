@@ -4,6 +4,7 @@ local opts = {
 
 local function config()
 	local harpoon = require("harpoon")
+    local harpoon_extensions = require("harpoon.extensions")
 
 	harpoon:setup(opts)
 
@@ -25,6 +26,8 @@ local function config()
 			)
 		end,
 	})
+
+    harpoon:extend(harpoon_extensions.builtins.highlight_current_file())
 end
 
 return {

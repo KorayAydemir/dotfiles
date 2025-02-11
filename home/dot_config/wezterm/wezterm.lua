@@ -1,9 +1,12 @@
 local wezterm = require("wezterm")
-local act = wezterm.action
 
-local is_mac <const> = wezterm.target_triple == "aarch64-apple-darwin"
-local is_linux <const> = wezterm.target_triple == "86_64-unknown-linux-gnu"
-local is_win <const> = wezterm.target_triple == "x86_64-pc-windows-msvc"
+local config = wezterm.config_builder()
+local act = wezterm.action
+local mux = wezterm.mux
+
+local is_mac = wezterm.target_triple == "aarch64-apple-darwin"
+local is_linux = wezterm.target_triple == "86_64-unknown-linux-gnu"
+local is_win = wezterm.target_triple == "x86_64-pc-windows-msvc"
 local SUPER = is_mac and "CMD" or "ALT"
 
 local one = is_win and "!" or "1"
@@ -16,23 +19,22 @@ local seven = is_win and "&" or "7"
 local eight = is_win and "*" or "8"
 local nine = is_win and "(" or "9"
 
-
 wezterm.on("format-tab-title", function(tab)
-    -- Equivalent to POSIX basename(3)
-    -- Given "/foo/bar" returns "bar"
-    -- Given "c:\\foo\\bar" returns "bar".
-    local function basename(s)
-        return string.gsub(s, '(.*[/\\])(.*)', '%2')
-    end
+	-- Equivalent to POSIX basename(3)
+	-- Given "/foo/bar" returns "bar"
+	-- Given "c:\\foo\\bar" returns "bar".
+	local function basename(s)
+		return string.gsub(s, "(.*[/\\])(.*)", "%2")
+	end
 
-    local pane_cwd = tab.active_pane.current_working_dir.file_path
+	local pane_cwd = tab.active_pane.current_working_dir.file_path
 
-    if is_win then
-        local pane_cwd_without_slash_at_end = pane_cwd:sub(1, -2)
-        return basename(pane_cwd_without_slash_at_end)
-    end
+	if is_win then
+		local pane_cwd_without_slash_at_end = pane_cwd:sub(1, -2)
+		return basename(pane_cwd_without_slash_at_end)
+	end
 
-    return basename(pane_cwd)
+	return basename(pane_cwd)
 end)
 
 wezterm.on("trigger-vim-with-scrollback", function(window, pane)
@@ -66,7 +68,34 @@ wezterm.on("trigger-vim-with-scrollback", function(window, pane)
 	os.remove(name)
 end)
 
-local tabKeys = {
+config.default_prog = { is_win and "pwsh" or is_mac and "/opt/homebrew/bin/bash" }
+
+config.adjust_window_size_when_changing_font_size = false
+
+config.max_fps = 144
+config.window_padding = {
+	top = 0,
+	bottom = 0,
+	left = 0,
+	right = 0,
+}
+
+config.font_size = is_win and 16.0 or 18.0
+
+config.enable_tab_bar = true
+config.hide_tab_bar_if_only_one_tab = true
+
+config.unix_domains = {
+	{
+		name = "unix",
+	},
+}
+config.default_gui_startup_args = { "connect", "unix" }
+
+config.disable_default_key_bindings = false
+config.leader = { key = "a", mods = "CTRL", timeout_miliseconds = 2000 }
+config.keys = {
+	-- tab keys
 	{ key = one, mods = SUPER .. "|SHIFT", action = act({ ActivateTab = 0 }) },
 	{ key = two, mods = SUPER .. "|SHIFT", action = act({ ActivateTab = 1 }) },
 	{ key = three, mods = SUPER .. "|SHIFT", action = act({ ActivateTab = 2 }) },
@@ -85,9 +114,8 @@ local tabKeys = {
 	{ key = "w", mods = SUPER, action = act({ CloseCurrentTab = { confirm = true } }) },
 	{ key = "f", mods = SUPER, action = act.SpawnTab("CurrentPaneDomain") },
 	{ key = "t", mods = SUPER, action = act.SpawnCommandInNewTab({ cwd = wezterm.home_dir }) },
-}
 
-local otherKeys = {
+	-- other keys
 	{ key = "c", mods = SUPER, action = act({ CopyTo = "Clipboard" }) },
 	{ key = "v", mods = SUPER, action = act({ PasteFrom = "Clipboard" }) },
 
@@ -99,34 +127,21 @@ local otherKeys = {
 
 	{ key = "+", mods = SUPER .. "|SHIFT", action = wezterm.action.IncreaseFontSize },
 	{ key = "-", mods = SUPER, action = wezterm.action.DecreaseFontSize },
-}
 
-local config = {
-	default_prog = { is_win and "pwsh" or is_mac and "/opt/homebrew/bin/bash" },
-	max_fps = 144,
-	window_padding = {
-		top = 0,
-		bottom = 0,
-		left = 0,
-		right = 0,
+	{
+		key = one,
+		mods = "CTRL|SHIFT",
+		action = act.SwitchToWorkspace({
+			name = "default",
+		}),
 	},
-
-	font_size = is_win and 16.0 or 18.0,
-
-	enable_tab_bar = true,
-	hide_tab_bar_if_only_one_tab = true,
-
-	adjust_window_size_when_changing_font_size = false,
-
-	disable_default_key_bindings = false,
-	keys = {},
+	{
+		key = two,
+		mods = "CTRL|SHIFT",
+		action = act.SwitchToWorkspace({
+			name = "second",
+		}),
+	},
 }
-
-for _, v in ipairs(tabKeys) do
-	table.insert(config.keys, v)
-end
-for _, v in ipairs(otherKeys) do
-	table.insert(config.keys, v)
-end
 
 return config

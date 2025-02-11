@@ -6,8 +6,8 @@ return {
 		event = "VeryLazy",
 		opts = {},
 	},
-    {
-        "eandrju/cellular-automaton.nvim",
-        cmd = {"CellularAutomaton"},
-    }
+	{
+		"eandrju/cellular-automaton.nvim",
+		cmd = { "CellularAutomaton" },
+	},
 }

@@ -21,6 +21,7 @@ return {
 			json = { "prettierd" },
             rust = { "rustfmt" },
             toml = { "taplo" },
+            go = { "gofmt" },
             -- run on filetypes that don't have any formatters configured
             ["_"] = { "prettierd" }
 		},
