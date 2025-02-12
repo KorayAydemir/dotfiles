@@ -26,3 +26,5 @@ function prompt {
 function czcd {
     Set-Location "~/.local/share/chezmoi/"
 }
+
+function gs { git status }

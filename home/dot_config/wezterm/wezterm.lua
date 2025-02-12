@@ -88,18 +88,7 @@ config.font_size = is_win and 16.0 or 18.0
 config.enable_tab_bar = true
 config.hide_tab_bar_if_only_one_tab = true
 
-config.unix_domains = {
-	{
-		name = "unix",
-	},
-}
--- on mac it causes visual artifacts when scrolling in neovim
-if not is_mac then
-	config.default_gui_startup_args = { "connect", "unix" }
-end
-
 config.disable_default_key_bindings = false
-config.leader = { key = "a", mods = "CTRL", timeout_miliseconds = 2000 }
 config.keys = {
 	-- tab keys
 	{ key = one, mods = SUPER .. "|SHIFT", action = act({ ActivateTab = 0 }) },
