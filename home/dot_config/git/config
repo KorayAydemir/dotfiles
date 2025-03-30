@@ -1,0 +1,13 @@
+[user]
+	email = korayaydemir99@gmail.com
+	name = Koray Aydemir
+[core]
+	autocrlf = false
+	editor = nvim
+[pull]
+    rebase = false
+
+# include when *inside a git repo* inside this path.
+[includeIf "gitdir:C:/Users/Koray/dev/job/**"]
+    path = work-config
+    

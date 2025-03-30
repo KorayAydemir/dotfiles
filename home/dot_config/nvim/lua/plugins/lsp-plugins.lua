@@ -12,6 +12,7 @@ local function lsp_config()
 		"clangd",
 		"htmx",
 		"csharp_ls",
+        "quick_lint_js"
 	}
 
 	for _, server in ipairs(default_setups) do
@@ -53,6 +54,22 @@ local function lsp_config()
 			enable = false,
 		},
 	})
+
+	require("sonarlint").setup({
+		server = {
+			cmd = {
+                "C:/Users/Koray/AppData/Local/nvim-data/mason/bin/sonarlint-language-server.cmd",
+				"-stdio",
+				"-analyzers",
+                "C:/Users/Koray/AppData/Local/nvim-data/mason/share/sonarlint-analyzers/sonarcfamily.jar",
+                "C:/Users/Koray/AppData/Local/nvim-data/mason/share/sonarlint-analyzers/sonarjs.jar"
+			},
+		},
+		filetypes = {
+			"javascript",
+			"scss",
+		},
+	})
 end
 
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -74,9 +91,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end,
 })
 
-return {
-	{ "neovim/nvim-lspconfig", event = "VeryLazy", config = lsp_config },
 
+return {
+	{
+		"neovim/nvim-lspconfig",
+		event = "VeryLazy",
+		config = lsp_config,
+		dependencies = { "lewis6991/gitsigns.nvim", "https://gitlab.com/schrieveslaach/sonarlint.nvim" },
+	},
 	{ "williamboman/mason.nvim", config = true, cmd = "Mason" },
 	{
 		"williamboman/mason-lspconfig.nvim",
