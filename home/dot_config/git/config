@@ -10,4 +10,6 @@
 # include when *inside a git repo* inside this path.
 [includeIf "gitdir:C:/Users/Koray/dev/job/**"]
     path = work-config
-    
+
+[includeIf "gitdir:~/code/job/**"]
+    path = work-config
