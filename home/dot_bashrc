@@ -20,3 +20,7 @@ alias mcd=~/scripts/mcd.sh
 alias tp="yarn test:path $1"
 
 PS1='\w\$ '
+
+. "$HOME/.cargo/env"
+
+export PATH="$PATH:$(yarn global bin)"

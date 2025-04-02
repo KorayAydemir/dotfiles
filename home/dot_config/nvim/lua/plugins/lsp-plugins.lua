@@ -1,4 +1,4 @@
-local function lsp_config()
+local function nvim_lspconfig()
 	local lspconfig = require("lspconfig")
 	local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
@@ -10,7 +10,6 @@ local function lsp_config()
 		"pyright",
 		"pylsp",
 		"clangd",
-		"htmx",
 		"csharp_ls",
 	}
 
@@ -34,7 +33,14 @@ local function lsp_config()
 		},
 	})
 
+    -- enable as needed
+    -- lspconfig.htmx.setup({
+    --     capabilities = capabilities,
+    --     filetypes = 'html'
+    -- })
+
 	lspconfig.rust_analyzer.setup({
+        -- TODO: where is `capabilities = capabilities` ? if its not needed, document why
 		check = { command = "clippy", allTargets = false },
 		imports = {
 			granularity = {
@@ -75,8 +81,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 return {
-	{ "neovim/nvim-lspconfig", event = "VeryLazy", config = lsp_config },
-
+	{ "neovim/nvim-lspconfig", event = "VeryLazy", config = nvim_lspconfig },
 	{ "williamboman/mason.nvim", config = true, cmd = "Mason" },
 	{
 		"williamboman/mason-lspconfig.nvim",
