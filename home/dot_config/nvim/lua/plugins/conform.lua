@@ -19,15 +19,23 @@ return {
 			lua = { "stylua" },
 			javascript = { "prettierd" },
 			json = { "prettierd" },
-            rust = { "rustfmt" },
-            toml = { "taplo" },
-            go = { "gofmt" },
-            -- run on filetypes that don't have any formatters configured
-            ["_"] = { "prettierd" }
+			rust = { "rustfmt" },
+			toml = { "taplo" },
+			go = { "gofmt" },
+			-- run on filetypes that don't have any formatters configured
+			["_"] = { "prettierd" },
 		},
 		formatters = {
 			prettierd = {
-				prepend_args = { "--tab-width=4", "--print-width=100", "--config-precedence=prefer-file" },
+				prepend_args = {
+					"--tab-width=4",
+					-- "--print-width=100",
+                    "--config-precedence=prefer-file",
+
+					"--print-width=120",
+					"--experimental-ternaries=true",
+                    "--no-bracket-spacing=true"
+				},
 			},
 		},
 	},
