@@ -31,14 +31,52 @@ local function find_from_keywords()
 	return results
 end
 
+local function wrap_and_align_import(line, target_col)
+	local before, from_part = line:match("^(.-)%s+(from%s+.+)$")
+	if not before or not from_part then return { line } end
+
+	before = vim.trim(before)
+	local before_width = vim.fn.strdisplaywidth(before)
+
+	if before_width >= target_col then
+		local default = before:match("^import%s+([%w_$]+)%s*,")
+		local specifiers = before:match("{(.-)}")
+		local lines = {}
+		local import_line = "import"
+
+		if default then
+			import_line = import_line .. " " .. default .. ", {"
+		elseif specifiers then
+			import_line = import_line .. " {"
+		end
+
+		table.insert(lines, import_line)
+
+		if specifiers then
+			for spec in specifiers:gmatch("[^,%s]+") do
+				table.insert(lines, "    " .. spec .. ",")
+			end
+			lines[#lines] = lines[#lines]:gsub(",$", "") -- remove last comma
+		end
+
+		table.insert(lines, "}" .. string.rep(" ", target_col - 1) .. from_part)
+		return lines
+	else
+		local pad_len = target_col - before_width
+		local padding = string.rep(" ", math.max(1, pad_len))
+		return { before .. padding .. from_part }
+	end
+end
+
 M.format_imports = function ()
 	local bufnr = vim.api.nvim_get_current_buf()
 	local imports = find_from_keywords()
 
-	if #imports == 0 then
-		return
-	end
+	if #imports == 0 then return end
 
+    table.sort(imports, function(a, b)
+        return a.start_line > b.start_line -- process bottom-up
+    end)
 	for _, imp in ipairs(imports) do
 		local lines = vim.api.nvim_buf_get_lines(bufnr, imp.start_line - 1, imp.end_line, false)
 		local target_col = 48
@@ -47,15 +85,11 @@ M.format_imports = function ()
 		for i, line in ipairs(lines) do
 			local absolute_line = imp.start_line + i - 1
 			if absolute_line == imp.from_line then
-				local before, from_part = line:match("^(.-)%s+(from%s+.+)$")
-				if before and from_part then
-					before = vim.trim(before)
-					local pad_len = target_col - vim.fn.strdisplaywidth(before)
-					local padding = string.rep(" ", math.max(1, pad_len))
-					line = before .. padding .. from_part
-				end
+				local wrapped_lines = wrap_and_align_import(line, target_col)
+				vim.list_extend(new_lines, wrapped_lines)
+			else
+				table.insert(new_lines, line)
 			end
-			table.insert(new_lines, line)
 		end
 
 		vim.api.nvim_buf_set_lines(bufnr, imp.start_line - 1, imp.end_line, false, new_lines)
@@ -63,3 +97,7 @@ M.format_imports = function ()
 end
 
 return M
+
+----
+
+
